@@ -22,3 +22,35 @@ add_theme_support( 'title-tag' );
 
 // Ajouter menus dans l'interface wordpress
 add_theme_support( 'menus');
+
+function load_more_photos() {
+    $paged = $_POST['paged'];
+
+    $query = new WP_Query(array(
+        'post_type' => 'photo',
+        'orderby' => 'date',
+        'order' => 'ASC',
+        'posts_per_page' => 8,
+        'paged' => $paged,
+    ));
+
+    $output = '';
+
+    if ($query->have_posts()) {
+        while ($query->have_posts()) {
+            $query->the_post();
+            $output .= '<div class="container-galerie">';
+            ob_start();
+            get_template_part('/template_part/photo_block');
+            $output .= ob_get_clean();
+            $output .= '</div>';
+        }
+        wp_reset_postdata();
+    }
+
+    echo $output;
+    wp_die();
+}
+
+add_action('wp_ajax_load_more_photos_action', 'load_more_photos');
+add_action('wp_ajax_nopriv_load_more_photos_action', 'load_more_photos');

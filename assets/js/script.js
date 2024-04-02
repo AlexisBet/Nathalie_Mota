@@ -29,13 +29,6 @@ jQuery(document).ready(function($) {
             closeModal();
         }
     });
-
-
-$(".modal-open").click(function() {
-    $(".modal__content").animate({ height: "toggle", opacity: "toggle" }, 1000).toggleClass("open");
-    $(".modal__burger").toggleClass("close");
-    });
-    
 });
 
 jQuery(document).ready(function($) {
@@ -49,11 +42,41 @@ jQuery(document).ready(function($) {
         $(".container-arrows .img-arrows").css("visibility", "hidden"); // Rendre l'image invisible lorsque la souris quitte la flèche
     });
 
+
 $('.modal__burger').click(function(){
     $('nav').toggleClass('active');
     $(this).toggleClass('open');
-
 });
 
 });
 
+jQuery(document).ready(function($) {
+    var currentPage = 1; // Initialiser la page à charger
+
+    $('.load-more-photos').on('click', function() {
+        currentPage++; // Incrémenter le numéro de page
+
+        var nonce = $(this).data('nonce'); // Récupérer le nonce
+        var action = $(this).data('action'); // Récupérer l'action
+        var ajaxurl = $(this).data('ajaxurl'); // Récupérer l'URL du script de gestion Ajax
+
+        // Envoyer la requête Ajax
+        $.ajax({
+            type: 'POST',
+            url: ajaxurl,
+            dataType: 'html',
+            data: {
+                action: action,
+                nonce: nonce,
+                paged: currentPage // Passer le numéro de page à charger
+            },
+            success: function(response) {
+                // Ajouter les nouvelles photos chargées à la fin de la section img-gallery
+                $('.img-gallery').append(response);
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                console.log('Erreur Ajax : ' + errorThrown);
+            }
+        });
+    });
+});
