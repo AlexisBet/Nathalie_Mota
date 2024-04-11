@@ -22,43 +22,56 @@ jQuery(document).ready(function($) {
         // Appeler la fonction pour ouvrir la modale
         openModal();
     });
-    
+
     // Ajouter un écouteur d'événement pour fermer la modale lorsque l'utilisateur clique en dehors de celle-ci
-    $(window).on('click', function(event) {
+    $(document).on('click', function(event) {
         if ($(event.target).is(modal)) {
             closeModal();
         }
     });
-});
 
-jQuery(document).ready(function($) {
-    // Cacher l'image initialement
-    $(".container-arrows .img-arrows").css("visibility", "hidden");
+    $('.modale-contact').click(function(){
+        // Récupérez la référence de la photo en cours de consultation
+        const referenceText = $('.container-photo').find('.informations-photo p:nth-of-type(1)').text();
+        
+        // Extrait la valeur de la référence (supprime le texte "RÉFÉRENCE:")
+        const referenceValue = referenceText.split(':')[1].trim();
 
-    // Événement au survol de la flèche précédente
-    $(".arrow a").mouseenter(function() {
-        $(".container-arrows .img-arrows").css("visibility", "visible"); // Rendre l'image visible
-    }).mouseleave(function() {
-        $(".container-arrows .img-arrows").css("visibility", "hidden"); // Rendre l'image invisible lorsque la souris quitte la flèche
+        // Pré-remplissez le champ de référence dans la popup de contact avec la valeur extraite
+        $('input[name="ref"]').val(referenceValue);
     });
 
+    $(".container-arrows .img-arrows").css("visibility", "hidden");
+    $(".arrow-previous a").hover(function() {
+        $(this).closest('.arrow-previous').find('.img-arrows').css("visibility", "visible"); // Rendre l'image de la flèche précédente visible
+    }, function() {
+        $(this).closest('.arrow-previous').find('.img-arrows').css("visibility", "hidden"); // Rendre l'image de la flèche précédente invisible lorsque la souris quitte
+    });
+    
+    // Événement au survol de la flèche suivante
+    $(".arrow-next a").hover(function() {
+        $(this).closest('.arrow-next').find('.img-arrows').css("visibility", "visible"); // Rendre l'image de la flèche suivante visible
+    }, function() {
+        $(this).closest('.arrow-next').find('.img-arrows').css("visibility", "hidden"); // Rendre l'image de la flèche suivante invisible lorsque la souris quitte
+    });
 
-$('.modal__burger').click(function(){
-    $('nav').toggleClass('active');
-    $(this).toggleClass('open');
-});
+    $('.modal__burger').click(function(){
+        $('nav').toggleClass('active');
+        $(this).toggleClass('open');
+    });
 
-});
-
-jQuery(document).ready(function($) {
-    var currentPage = 1; // Initialiser la page à charger
+    let currentPage = 1; // Initialiser la page à charger
+    const ajaxurl = ajax_params.ajax_url; 
+    const action = 'load_more_photos_action';
 
     $('.load-more-photos').on('click', function() {
-        currentPage++; // Incrémenter le numéro de page
+        currentPage++;
 
-        var nonce = $(this).data('nonce'); // Récupérer le nonce
-        var action = $(this).data('action'); // Récupérer l'action
-        var ajaxurl = $(this).data('ajaxurl'); // Récupérer l'URL du script de gestion Ajax
+        const nonce = ajax_params.nonce;
+
+        const categorie = $('.category-filter .selected-option').attr('data-value');
+        const format = $('.form-filter .selected-option').attr('data-value');
+        const tri = $('.date-filter .selected-option').attr('data-value');
 
         // Envoyer la requête Ajax
         $.ajax({
@@ -68,7 +81,10 @@ jQuery(document).ready(function($) {
             data: {
                 action: action,
                 nonce: nonce,
-                paged: currentPage // Passer le numéro de page à charger
+                paged: currentPage,
+                categorie: categorie,
+                format: format, 
+                tri: tri
             },
             success: function(response) {
                 // Ajouter les nouvelles photos chargées à la fin de la section img-gallery
@@ -79,4 +95,74 @@ jQuery(document).ready(function($) {
             }
         });
     });
+
+    // Fonction pour charger les photos avec les filtres sélectionnés
+    function loadFilteredPhotos() {
+        let categorie = $('.category-filter .selected-option').attr('data-value');
+        let format = $('.form-filter .selected-option').attr('data-value');
+        let tri = $('.date-filter .selected-option').attr('data-value');
+    
+        $.ajax({
+            type: 'POST',
+            url: ajax_params.ajax_url, 
+            data: {
+                action: 'load_filtered_photos_action',
+                categorie: categorie,
+                format: format,
+                tri: tri,
+            },
+            success: function(response) {
+                $('.img-gallery').html(response);
+                currentPage = 1; 
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                console.log('Erreur Ajax : ' + errorThrown);
+            }
+        });
+    }
+    
+    $(document).ready(function() {
+        loadFilteredPhotos();
+    });
+    
+    // Écouter les clics sur les éléments li pour les filtres
+    $('.custom-ul li').on('click', function() {
+        let selectedOption = $(this).text();
+        let selectedValue = $(this).attr('data-value');
+        $(this).closest('.custom-select').find('.selected-option').text(selectedOption).attr('data-value', selectedValue);
+        loadFilteredPhotos();
+    });
+
+    // Afficher ou masquer la liste déroulante personnalisée lors du clic sur le sélecteur
+    $('.custom-select').on('click', function() {
+        $(this).find('.custom-ul').toggle();
+    });
+    
+    // Masquer la liste déroulante personnalisée lors du clic en dehors de celle-ci
+    $(document).on('click', function(e) {
+        if (!$(e.target).closest('.custom-select').length) {
+            $('.custom-ul').hide();
+        }
+    });
+    
+    // Vérifier la hauteur de l'élément container-photo
+    let containerHeight = $(".container-photo").height();
+
+    console.log("Container height:", containerHeight);
+
+    // Appliquer le style en fonction de la hauteur
+    if (containerHeight < 1255) {
+        $(".arrow-previous .img-arrows, .arrow-next .img-arrows").css("top", "60%");
+    } else if (containerHeight < 1284) {
+        $(".arrow-previous .img-arrows, .arrow-next .img-arrows").css("top", "64%");
+    } else if (containerHeight < 1330) {
+        $(".arrow-previous .img-arrows, .arrow-next .img-arrows").css("top", "67%");
+    } else if (containerHeight < 1500) {
+        $(".arrow-previous .img-arrows, .arrow-next .img-arrows").css("top", "73%");
+    }
+
+    $('.custom-select').on('click', function() {
+        $(this).toggleClass('open'); // Ajouter ou supprimer la classe 'open' lorsque le menu est cliqué
+    });
+
 });
