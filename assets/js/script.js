@@ -35,7 +35,7 @@ jQuery(document).ready(function($) {
         const referenceText = $('.container-photo').find('.informations-photo p:nth-of-type(1)').text();
         
         // Extrait la valeur de la référence (supprime le texte "RÉFÉRENCE:")
-        const referenceValue = referenceText.split(':')[1].trim();
+        const referenceValue = referenceText.split(':')[1];
 
         // Pré-remplissez le champ de référence dans la popup de contact avec la valeur extraite
         $('input[name="ref"]').val(referenceValue);
