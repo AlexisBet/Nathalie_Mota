@@ -162,7 +162,17 @@ jQuery(document).ready(function($) {
     }
 
     $('.custom-select').on('click', function() {
-        $(this).toggleClass('open'); // Ajouter ou supprimer la classe 'open' lorsque le menu est cliqué
+        $(this).toggleClass('open');
+        const icon = $(this).find('i');
+        icon.toggleClass('fa-chevron-down fa-chevron-up');
     });
+    
+    // Ajoutez une condition pour vérifier si l'élément cliqué est à l'intérieur du menu
+    $(document).on('click', function(event) {
+        if (!$(event.target).closest('.custom-select').length) {
+            $('.custom-select').removeClass('open');
+            $('.custom-select i').removeClass('fa-chevron-up').addClass('fa-chevron-down');
+        }
+    });    
 
 });

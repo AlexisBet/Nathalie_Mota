@@ -355,6 +355,7 @@ nav li a:hover{
     font-size: 14px;
     line-height: 21px;
     letter-spacing: 2px;
+    text-transform: uppercase;
 }
 .affichage-photo{
     position: relative;
@@ -561,12 +562,12 @@ nav li a:hover{
 }
 
 .category-filter{
-    margin-left: 1VW;
+    margin-left: 1vw;
     margin-right: 2.5vw;
 }
 
 .date-filter{
-    padding-left: 23vw;
+    margin-left: 23vw;
 }
 
 .custom-select {
@@ -598,22 +599,14 @@ nav li a:hover{
     border-radius: 0 0 8px 8px;
     width: 260px;
     z-index: 999;
+    cursor: pointer;
 }
 
-.selected-option::after {
-    content: "\2304";
+.fas{
+    position: absolute;
+    right: 10%;
+    top: 30%;
     font-size: 20px;
-    position: absolute;
-    display: inline-block;
-    right: 35px;
-    top: 5px;
-}
-
-.open .selected-option::after {
-    content: "\2303";
-    font-size: 20px !important;
-    position: absolute;
-    display: inline-block;
 }
 
 .custom-ul li {
@@ -622,6 +615,7 @@ nav li a:hover{
     font-family: 'Poppins';
     font-size: 12px;
     font-weight: 500;
+    cursor: pointer;
 }
 
 .custom-ul li:hover {

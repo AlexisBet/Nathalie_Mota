@@ -27,6 +27,7 @@
     <section class="filter">
         <div class="category-filter custom-select">
             <div class="selected-option" tabindex="0">CATÉGORIES</div>
+            <i class="fas fa-chevron-down"></i>
             <ul class="custom-ul">
                 <?php
                 $categories = get_terms('categorie');
@@ -38,6 +39,7 @@
         </div>
         <div class="form-filter custom-select">
             <div class="selected-option" tabindex="0">FORMATS</div>
+            <i class="fas fa-chevron-down"></i>
             <ul class="custom-ul">
                 <?php
                 $formats = get_terms('format');
@@ -49,6 +51,7 @@
         </div>
         <div class="date-filter custom-select">
             <div class="selected-option" tabindex="0">TRIER PAR</div>
+            <i class="fas fa-chevron-down"></i>
             <ul class="custom-ul">
                 <li data-value="DESC">Plus récentes</li>
                 <li data-value="ASC">Plus anciennes</li>
