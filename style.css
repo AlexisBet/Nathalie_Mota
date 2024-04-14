@@ -703,7 +703,7 @@ nav li a:hover{
     right: -20%;
 }
 
-@media screen and (max-width: 820px){
+@media screen and (max-width: 899px){
 
     footer{
         flex-direction: column;
@@ -808,7 +808,7 @@ nav li a:hover{
 
 /* Front-page.php */
 
-@media screen and (max-width: 820px){
+@media screen and (max-width: 899px){
 
     .hero-image{
         height: auto;
