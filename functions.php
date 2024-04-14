@@ -36,15 +36,36 @@ add_action('after_setup_theme', 'add_theme_support');
 function load_more_photos() {
     $paged = $_POST['paged'];
     $tri = $_POST['tri'];
-
+    $categorie = isset($_POST['categorie']) ? $_POST['categorie'] : '';
+    $format = isset($_POST['format']) ? $_POST['format'] : '';
  
-    $query = new WP_Query(array(
+    $args = array(
         'post_type' => 'photo',
         'orderby' => 'date',
         'order' => $tri,
         'posts_per_page' => 8,
         'paged' => $paged,
-    ));
+    );
+
+     // Ajouter le filtre par catégorie si sélectionné
+     if (!empty($categorie)) {
+        $args['tax_query'][] = array(
+            'taxonomy' => 'categorie',
+            'field' => 'slug',
+            'terms' => $categorie,
+        );
+    }
+
+    // Ajouter le filtre par format si sélectionné
+    if (!empty($format)) {
+        $args['tax_query'][] = array(
+            'taxonomy' => 'format',
+            'field' => 'slug',
+            'terms' => $format,
+        );
+    }
+
+    $query = new WP_Query($args);
 
     $return = '';
 
