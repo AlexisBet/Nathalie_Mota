@@ -113,7 +113,7 @@ jQuery(document).ready(function($) {
             },
             success: function(response) {
                 $('.img-gallery').html(response);
-                currentPage = 1; 
+                currentPage = 1;
             },
             error: function(xhr, textStatus, errorThrown) {
                 console.log('Erreur Ajax : ' + errorThrown);

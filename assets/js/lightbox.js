@@ -1,17 +1,17 @@
 jQuery(document).ready(function($) {
-    const imageUrls = [];
     let currentImageIndex = 0;
 
     // Ouvrir la lightbox lorsque l'image est cliquée
     $(document).on('click', '.fullscreen, img.fullscreen', function() {
         const container = $(this).closest('.container-galerie');
-        const clickedImageIndex = imageUrls.indexOf(container.find('img.photo').attr('src'));
+        const clickedImageIndex = container.index();
         openLightbox(clickedImageIndex);
     });
 
     // Fonction pour ouvrir la lightbox avec l'index de l'image
     function openLightbox(index) {
-        $(".img-fullscreen").attr("src", imageUrls[index]);
+        const imageUrl = $('.container-galerie').eq(index).find('img.photo').attr('src');
+        $(".img-fullscreen").attr("src", imageUrl);
         currentImageIndex = index;
         updateImageInfo();
         $('.container-lightbox').show();
@@ -19,14 +19,16 @@ jQuery(document).ready(function($) {
 
     // Gérer le clic sur les flèches précédentes et suivantes
     $('.prev-image').click(function() {
-        currentImageIndex = (currentImageIndex - 1 + imageUrls.length) % imageUrls.length;
-        $(".img-fullscreen").attr("src", imageUrls[currentImageIndex]);
+        currentImageIndex = (currentImageIndex - 1 + $('.container-galerie').length) % $('.container-galerie').length;
+        const imageUrl = $('.container-galerie').eq(currentImageIndex).find('img.photo').attr('src');
+        $(".img-fullscreen").attr("src", imageUrl);
         updateImageInfo();
     });
 
     $('.next-image').click(function() {
-        currentImageIndex = (currentImageIndex + 1) % imageUrls.length;
-        $(".img-fullscreen").attr("src", imageUrls[currentImageIndex]);
+        currentImageIndex = (currentImageIndex + 1) % $('.container-galerie').length;
+        const imageUrl = $('.container-galerie').eq(currentImageIndex).find('img.photo').attr('src');
+        $(".img-fullscreen").attr("src", imageUrl);
         updateImageInfo();
     });
 
@@ -43,8 +45,24 @@ jQuery(document).ready(function($) {
         $('.fullscreen-photo h5').text(reference);
     }
 
-    // Récupérer les URLs des images au chargement de la page
-    $('.container-galerie img.photo').each(function() {
-        imageUrls.push($(this).attr('src'));
+    // Fonction pour récupérer les URLs des images
+    function updateImageUrls() {
+        $('.container-galerie img.photo').each(function() {
+            const imageUrl = $(this).attr('src');
+            if (!imageUrl) return; // S'assurer que l'URL de l'image est définie
+            if ($('.container-galerie img.photo').index(this) >= imageUrls.length) {
+                imageUrls.push(imageUrl);
+            }
+        });
+    }
+
+    // Mettre à jour les URLs des images au chargement de la page
+    updateImageUrls();
+
+    // Mettre à jour les URLs des images chaque fois que de nouvelles images sont chargées
+    $(document).ajaxComplete(function(event, xhr, settings) {
+        if (settings.url === ajax_params.ajax_url && settings.data.includes('action=load_more_photos_action')) {
+            updateImageUrls();
+        }
     });
 });
