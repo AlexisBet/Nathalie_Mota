@@ -89,6 +89,10 @@ jQuery(document).ready(function($) {
             success: function(response) {
                 // Ajouter les nouvelles photos chargées à la fin de la section img-gallery
                 $('.img-gallery').append(response);
+
+                if (response.trim() === '') {
+                    $('.load-more-photos').hide();
+                }
             },
             error: function(xhr, textStatus, errorThrown) {
                 console.log('Erreur Ajax : ' + errorThrown);
@@ -101,12 +105,14 @@ jQuery(document).ready(function($) {
         let categorie = $('.category-filter .selected-option').attr('data-value');
         let format = $('.form-filter .selected-option').attr('data-value');
         let tri = $('.date-filter .selected-option').attr('data-value');
+        const nonce = ajax_params.nonce;
     
         $.ajax({
             type: 'POST',
             url: ajax_params.ajax_url, 
             data: {
                 action: 'load_filtered_photos_action',
+                nonce: nonce,
                 categorie: categorie,
                 format: format,
                 tri: tri,
@@ -144,22 +150,6 @@ jQuery(document).ready(function($) {
             $('.custom-ul').hide();
         }
     });
-    
-    // Vérifier la hauteur de l'élément container-photo
-    let containerHeight = $(".container-photo").height();
-
-    console.log("Container height:", containerHeight);
-
-    // Appliquer le style en fonction de la hauteur
-    if (containerHeight < 1255) {
-        $(".arrow-previous .img-arrows, .arrow-next .img-arrows").css("top", "60%");
-    } else if (containerHeight < 1284) {
-        $(".arrow-previous .img-arrows, .arrow-next .img-arrows").css("top", "64%");
-    } else if (containerHeight < 1330) {
-        $(".arrow-previous .img-arrows, .arrow-next .img-arrows").css("top", "67%");
-    } else if (containerHeight < 1500) {
-        $(".arrow-previous .img-arrows, .arrow-next .img-arrows").css("top", "73%");
-    }
 
     $('.custom-select').on('click', function() {
         $(this).toggleClass('open');

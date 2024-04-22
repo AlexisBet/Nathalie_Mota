@@ -1,5 +1,6 @@
 jQuery(document).ready(function($) {
     let currentImageIndex = 0;
+    let imageUrls = [];
 
     // Ouvrir la lightbox lorsque l'image est cliquée
     $(document).on('click', '.fullscreen, img.fullscreen', function() {
@@ -59,10 +60,4 @@ jQuery(document).ready(function($) {
     // Mettre à jour les URLs des images au chargement de la page
     updateImageUrls();
 
-    // Mettre à jour les URLs des images chaque fois que de nouvelles images sont chargées
-    $(document).ajaxComplete(function(event, xhr, settings) {
-        if (settings.url === ajax_params.ajax_url && settings.data.includes('action=load_more_photos_action')) {
-            updateImageUrls();
-        }
-    });
 });

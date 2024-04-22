@@ -67,16 +67,12 @@ function load_more_photos() {
 
     $query = new WP_Query($args);
 
-    $return = '';
-
     if ($query->have_posts()) {
         while ($query->have_posts()) {
             $query->the_post();
-            $return .= '<div class="container-galerie">';
-            ob_start();
-            get_template_part('/template_part/photo_block');
-            $return .= ob_get_clean();
-            $return .= '</div>';
+            echo '<div class="container-galerie">';
+            get_template_part('/template_part/photo_block', '', false);
+            echo '</div>';
         }
         wp_reset_postdata();
     }
