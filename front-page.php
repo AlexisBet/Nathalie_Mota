@@ -94,7 +94,6 @@
         wp_reset_postdata();
         ?>
     </section>
-
     <div class="container-load">
         <button
             class="load-more-photos custom-button"

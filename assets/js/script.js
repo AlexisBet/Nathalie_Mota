@@ -87,12 +87,15 @@ jQuery(document).ready(function($) {
                 tri: tri
             },
             success: function(response) {
-                // Ajouter les nouvelles photos chargées à la fin de la section img-gallery
-                $('.img-gallery').append(response);
-
-                if (response.trim() === '') {
-                    $('.load-more-photos').hide();
-                }
+            // Ajouter les nouvelles photos chargées à la fin de la section img-gallery
+            $('.img-gallery').append(response);
+            // Vérifier si la réponse est vide et masquer le bouton "Charger plus" si nécessaire
+            if (!response.trim()) {
+                $('.load-more-photos').hide();
+            } else {
+                $('.load-more-photos').show();
+                currentPage++; // Incrémenter la page uniquement s'il y a plus de photos à charger
+            }
             },
             error: function(xhr, textStatus, errorThrown) {
                 console.log('Erreur Ajax : ' + errorThrown);
@@ -120,6 +123,12 @@ jQuery(document).ready(function($) {
             success: function(response) {
                 $('.img-gallery').html(response);
                 currentPage = 1;
+                // Masquer le bouton "Charger plus" s'il n'y a pas de photos supplémentaires à charger
+            if (!response.trim()) {
+                $('.load-more-photos').hide();
+            } else {
+                $('.load-more-photos').show();
+            }
             },
             error: function(xhr, textStatus, errorThrown) {
                 console.log('Erreur Ajax : ' + errorThrown);

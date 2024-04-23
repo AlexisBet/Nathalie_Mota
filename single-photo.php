@@ -92,4 +92,4 @@ $categorie = get_the_terms(get_the_ID(), 'categorie');
     </div>
 <?php endwhile;
 endif;
-get_footer(); ?>
+get_footer(); ?> 

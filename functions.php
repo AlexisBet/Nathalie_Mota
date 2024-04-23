@@ -74,10 +74,8 @@ function load_more_photos() {
             get_template_part('/template_part/photo_block', '', false);
             echo '</div>';
         }
-        wp_reset_postdata();
-    }
-
-    echo $return;
+    wp_reset_postdata();
+}
     wp_die();
 }
 
@@ -134,7 +132,6 @@ function load_filtered_photos() {
             <?php
         endwhile;
     endif;
-
     // Réinitialiser les données de la requête
     wp_reset_postdata();
 
